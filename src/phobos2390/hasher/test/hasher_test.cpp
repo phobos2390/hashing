@@ -1,1 +1,7 @@
-//TEST code here
+#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
+#include <catch2/catch.hpp>
+
+TEST_CASE( "boileplate", "basic" ) 
+{
+    REQUIRE( 1 == 1 );
+}

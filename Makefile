@@ -1,13 +1,13 @@
 all:
 	@echo "test, lib, clean"
 
-test: lib
-	build/hash_test
+test: lib 
+	build/hasher_test
 	
 lib:
-	@mkdir build
-	@cd build; @cmake ..
-	@cd build; @make
+	@mkdir -p build
+	@cd build; cmake ..
+	@cd build; make
 
 clean:
 	@rm -rf build
