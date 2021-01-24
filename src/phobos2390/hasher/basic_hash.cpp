@@ -373,3 +373,16 @@ uint32_t xor_divide(uint64_t int_value)
 {
     return ((int_value & 0xffffffff00000000) >> 32) ^ (int_value & 0x00000000ffffffff);
 }
+
+uint8_t hash_byte_double(uint8_t input, uint8_t root, uint8_t hashes[c_bits_in_byte][4])
+{
+    uint8_t return_hash = root;    
+    uint8_t mask = 0x3;
+    uint8_t current = input;
+    for(uint8_t i = 0; i < c_bits_in_byte; i++)
+    {
+        return_hash += hashes[i][current & mask];
+        current = current >> 1;
+    }    
+    return return_hash;
+}

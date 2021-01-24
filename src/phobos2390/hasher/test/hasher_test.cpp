@@ -43,54 +43,54 @@ uint64_t collisions_test( uint64_t (*hash_func)(uint64_t input)
 
 TEST_CASE("integer 32 bit", "hash")
 {
-    uint64_t hash_value = 0x15162d8306ea2c7c;
-    for(uint32_t i = 0; i < 0x40; i++)
-    {
-        hash_value = hash_int(hash_value);
-        std::cout << "    0x" << std::hex << hash_value << ",\n";
-    }
-    std::cout << "\n";
-    fflush(stdout);
+//    uint64_t hash_value = 0x15162d8306ea2c7c;
+//    for(uint32_t i = 0; i < 0x40; i++)
+//    {
+//        hash_value = hash_int(hash_value);
+//        std::cout << "    0x" << std::hex << hash_value << ",\n";
+//    }
+//    std::cout << "\n";
+//    fflush(stdout);
 }
 
 TEST_CASE("integer 64 bit", "hash")
 {
-    uint64_t hash_value = 0x123123159796acca;
-    for(uint32_t i = 0; i < 0x78; i++)
-    {
-        hash_value = hash_long(hash_value);
-        std::cout << "    0x" << std::hex << hash_value << ",\n";
-    }
-    fflush(stdout);
+//    uint64_t hash_value = 0x123123159796acca;
+//    for(uint32_t i = 0; i < 0x78; i++)
+//    {
+//        hash_value = hash_long(hash_value);
+//        std::cout << "    0x" << std::hex << hash_value << ",\n";
+//    }
+//    fflush(stdout);
 }
 
 TEST_CASE("exhaustive collisions", "hash collision")
 {
-    std::map<uint64_t, uint64_t> collisions;
-    uint64_t total_collisions = 0;
-    uint64_t max_collisions = 0;
-    uint64_t hash_space = 0x10;// 0x100ff;//0x1ffff;//0xffffffffffffffff;
-    for(uint32_t i = 0; i < hash_space; i++)
-    {
-        uint64_t hashed = hash_long(i);
-        if(collisions.find(hashed) == collisions.end())
-        {
-            collisions.emplace(hashed, 0);
-        }
-        else
-        {
-//            std::cout << "Collision: " << std::hex << hashed << "(" << i << ")\n";
-//            fflush(stdout);
-            ++total_collisions;
-            ++collisions[hashed];
-            if(collisions[hashed] > max_collisions)
-            {
-                max_collisions = collisions[hashed];
-            }
-        }
-    }
-    REQUIRE(total_collisions <= 0x100000000);
-    REQUIRE(max_collisions <= total_collisions);
+//    std::map<uint64_t, uint64_t> collisions;
+//    uint64_t total_collisions = 0;
+//    uint64_t max_collisions = 0;
+//    uint64_t hash_space = 0x10;// 0x100ff;//0x1ffff;//0xffffffffffffffff;
+//    for(uint32_t i = 0; i < hash_space; i++)
+//    {
+//        uint64_t hashed = hash_long(i);
+//        if(collisions.find(hashed) == collisions.end())
+//        {
+//            collisions.emplace(hashed, 0);
+//        }
+//        else
+//        {
+////            std::cout << "Collision: " << std::hex << hashed << "(" << i << ")\n";
+////            fflush(stdout);
+//            ++total_collisions;
+//            ++collisions[hashed];
+//            if(collisions[hashed] > max_collisions)
+//            {
+//                max_collisions = collisions[hashed];
+//            }
+//        }
+//    }
+//    REQUIRE(total_collisions <= 0x100000000);
+//    REQUIRE(max_collisions <= total_collisions);
 }
 
 uint64_t mod_exp_xor_hash(uint64_t input)
@@ -107,9 +107,9 @@ uint64_t mod_exp_xor_hash(uint64_t input)
 
 TEST_CASE("mod_exp_hash", "example combined mod_exp_xor_hash")
 {
-    std::map<uint64_t, uint64_t> collisions;
-    uint64_t total_collisions = collisions_test(&mod_exp_xor_hash,collisions,0x0,0x10);
-    REQUIRE(total_collisions == 0x0);
+//    std::map<uint64_t, uint64_t> collisions;
+//    uint64_t total_collisions = collisions_test(&mod_exp_xor_hash,collisions,0x0,0x10);
+//    REQUIRE(total_collisions == 0x0);
 }
 
 void print_stats_for_hash_byte_seeds(uint8_t initial, uint64_t seed)
@@ -206,7 +206,7 @@ void print_stats_for_hash_short_seeds(uint8_t initial, uint64_t seed)
 
 void print_stats_for_hash_int_seeds(uint8_t initial, uint64_t seed)
 {
-    uint16_t hashes [c_bits_in_int];
+    uint32_t hashes [c_bits_in_int];
     generate_int_hash_bytes(initial, seed, hashes);
     std::map<uint32_t, uint32_t> collisions;
     uint16_t total_collisions = 0;
@@ -269,50 +269,117 @@ uint64_t gen_new_seed(uint8_t initial, uint64_t seed)
 
 TEST_CASE("byte seeded hash", "initial byte seeded")
 {    
-    print_stats_for_hash_byte_seeds(0x5a, 0x0123456789abcdef);
-    print_stats_for_hash_byte_seeds(0x32, 0x0123456789abcdef);
-    print_stats_for_hash_byte_seeds(0x00, 0x0123456789abcdef);
-    print_stats_for_hash_byte_seeds(0xaa, 0x0123456789abcdef);
-
-    print_stats_for_hash_byte_seeds(0xaa, 0xfedcba9876543210);
-
-    print_stats_for_hash_byte_seeds(0xaa, 0x74cf9b203d8e1a65);
-
-    print_stats_for_hash_byte_seeds(0xaa, 0x20bc58317f9a64de);
-    
-    print_stats_for_hash_byte_seeds
-        ( 0xaa
-        , gen_new_seed(0xaa, 0x0123456789abcdef));
-
-    print_stats_for_hash_byte_seeds
-        ( 0xaa
-        , gen_new_seed
-            ( 0xaa
-            , gen_new_seed(0xaa, 0x0123456789abcdef)));
-
-    print_stats_for_hash_byte_seeds
-        ( 0xaa
-        , gen_new_seed
-            ( 0xaa
-            , gen_new_seed
-                ( 0xaa
-                , gen_new_seed(0xaa, 0x0123456789abcdef))));
-
-    print_stats_for_hash_byte_seeds
-        ( 0xaa
-        , gen_new_seed
-            ( 0xaa
-            , gen_new_seed
-                ( 0xaa
-                , gen_new_seed(0xaa, 0x74cf9b203d8e1a65))));
+//    print_stats_for_hash_byte_seeds(0x5a, 0x0123456789abcdef);
+//    print_stats_for_hash_byte_seeds(0x32, 0x0123456789abcdef);
+//    print_stats_for_hash_byte_seeds(0x00, 0x0123456789abcdef);
+//    print_stats_for_hash_byte_seeds(0xaa, 0x0123456789abcdef);
+//
+//    print_stats_for_hash_byte_seeds(0xaa, 0xfedcba9876543210);
+//
+//    print_stats_for_hash_byte_seeds(0xaa, 0x74cf9b203d8e1a65);
+//
+//    print_stats_for_hash_byte_seeds(0xaa, 0x20bc58317f9a64de);
+//    
+//    print_stats_for_hash_byte_seeds
+//        ( 0xaa
+//        , gen_new_seed(0xaa, 0x0123456789abcdef));
+//
+//    print_stats_for_hash_byte_seeds
+//        ( 0xaa
+//        , gen_new_seed
+//            ( 0xaa
+//            , gen_new_seed(0xaa, 0x0123456789abcdef)));
+//
+//    print_stats_for_hash_byte_seeds
+//        ( 0xaa
+//        , gen_new_seed
+//            ( 0xaa
+//            , gen_new_seed
+//                ( 0xaa
+//                , gen_new_seed(0xaa, 0x0123456789abcdef))));
+//
+//    print_stats_for_hash_byte_seeds
+//        ( 0xaa
+//        , gen_new_seed
+//            ( 0xaa
+//            , gen_new_seed
+//                ( 0xaa
+//                , gen_new_seed(0xaa, 0x74cf9b203d8e1a65))));
 }
 
-TEST_CASE("short seeded hash", "initial short seeded")
-{
-    uint64_t initial = 0xaa;
-//    uint64_t seed = 0x0123456789abcdef;
-    uint64_t seed = 0x20bc58317f9a64de;
-//    uint64_t seed = 0x74cf9b203d8e1a65;
-    print_stats_for_hash_short_seeds(initial, seed);
-}
+//TEST_CASE("short seeded hash", "initial short seeded")
+//{
+//    uint64_t initial = 0xaa;
+////    uint64_t seed = 0x0123456789abcdef;
+//    uint64_t seed = 0x20bc58317f9a64de;
+////    uint64_t seed = 0x74cf9b203d8e1a65;
+//    print_stats_for_hash_short_seeds(initial, seed);
+//}
 
+//TEST_CASE("byte double wide hash", "byte seeded")
+//{
+//    uint64_t initial = 0xaa;
+//    uint8_t instances [0x100];
+//    memset(instances,0,0x100);
+//    uint8_t hashes [8][4] = {
+////        { 0x99, 0xAA, 0xBB, 0xCC }, 
+////        { 0xDC, 0xBA, 0x98, 0x76 }, 
+////        { 0x55, 0x66, 0x77, 0x88 }, 
+////        { 0xDD, 0xEE, 0xFF, 0xFE }, 
+////        { 0x54, 0x32, 0x10, 0x01 }, 
+////        { 0xAB, 0xCD, 0xEF, 0x00 },
+////        { 0x23, 0x45, 0x67, 0x89 }, 
+////        { 0x11, 0x22, 0x33, 0x44 }, 
+//        { 0x11, 0x22, 0x33, 0x44 }, 
+//        { 0x55, 0x66, 0x77, 0x88 }, 
+//        { 0x99, 0xAA, 0xBB, 0xCC }, 
+//        { 0xDD, 0xEE, 0xFF, 0xFE }, 
+//        { 0xDC, 0xBA, 0x98, 0x76 }, 
+//        { 0x54, 0x32, 0x10, 0x01 }, 
+//        { 0x23, 0x45, 0x67, 0x89 }, 
+//        { 0xAB, 0xCD, 0xEF, 0x00 },
+//    };
+//    uint8_t hex_digit_hits[0x10];
+//    memset(hex_digit_hits,0,sizeof(hex_digit_hits));
+//    for(uint16_t i = 0; i < 0x100; i++)
+//    {
+//        uint8_t hashed_value = hash_byte_double(i,initial,hashes);
+//        ++instances[hashed_value];
+//        printf("0x%x: 0x%x\n",i,hashed_value);
+//        ++hex_digit_hits[hashed_value & 0xF];
+//        ++hex_digit_hits[(hashed_value & 0xF0) >> 0x4];
+//    }
+//    printf("\n\n\n\n");
+//    uint8_t number_of_hits = 0;
+//    uint8_t highest_hit = 0;
+//    for(uint16_t i = 0; i < 0x100; i++)
+//    {
+//        printf("0x%x: 0x%x\n",i,instances[i]);
+//        if(instances[i] > highest_hit)
+//        {
+//            highest_hit = instances[i];
+//        }
+//        if(instances[i] > 0)
+//        {
+//            number_of_hits++;
+//        }
+//    }
+//    for(uint8_t i = 0; i < 0x10; i++)
+//    {
+//        printf("0x%x: %d\n-", i, hex_digit_hits[i]);
+//    }
+//    printf("Hit %d out of 256\n", number_of_hits);
+//    printf("Highest hit: %d\n", highest_hit);
+//}
+//
+//TEST_CASE("prng_from_hash", "seeded_prng")
+//{
+//    uint64_t seed = 0x44b2a32c00234257;
+//    uint64_t hashes[c_bits_in_short];  
+//    uint64_t current_hashes[c_bits_in_short];
+//    uint64_t state = seed;
+//    generate_long_hash_bytes(seed & 0xFF, seed, hashes);
+//    state = hash_long_seed(state, hashes);
+//    
+//    
+//}

@@ -9,5 +9,8 @@ lib:
 	@cd build; cmake ..
 	@cd build; make
 
+single_bit_hash_default_list: lib
+	build/single_bit_hash_list
+
 clean:
 	@rm -rf build
