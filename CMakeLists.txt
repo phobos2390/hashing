@@ -46,6 +46,9 @@ add_library(${LIB_NAME_STATIC} STATIC ${all_source_files})
 message("Building shared library ${LIB_NAME_SHARED} with ${all_source_files}")
 add_library(${LIB_NAME_SHARED} SHARED ${all_source_files})
 
+add_executable(password_generator ${SRC_ROOT_DIR}/app/password_generator.cpp)
+target_link_libraries(password_generator ${LIB_NAME_STATIC})
+
 add_executable(tab_hash_64bit ${SRC_ROOT_DIR}/app/tab_hash_64bit.cpp)
 target_link_libraries(tab_hash_64bit ${LIB_NAME_STATIC})
 add_executable(tab_hash ${SRC_ROOT_DIR}/app/tab_hash.cpp)

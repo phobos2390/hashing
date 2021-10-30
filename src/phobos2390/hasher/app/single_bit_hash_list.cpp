@@ -4,6 +4,7 @@
 #include <string>
 #include <hasher/tabulated_single_bit_hasher.h>
 #include <hasher/tabulated_hasher.h>
+#include <hasher/tabulated_block_hasher.h>
 #include <algorithm>
 #include <numeric>
 
@@ -11,8 +12,11 @@ using namespace std;
 
 int main(int argc, char** argv) 
 {
+    hasher::tabulated_block_hasher block_hasher(8);
     hasher::tabulated_hasher tab_hasher;
-    tab_hasher.set_output_size(2);
+    tab_hasher.set_byte_hasher(block_hasher);
+    tab_hasher.set_seeder(block_hasher);
+    tab_hasher.set_output_size(4);
     tab_hasher.set_seed(0);
     
     for(size_t i = 0; i < 0x100; i++)

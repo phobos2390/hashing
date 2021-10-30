@@ -3,9 +3,7 @@
 #include <hasher/tabulated_hasher.h>
 #include <algorithm>
 #include <hasher/tabulated_single_bit_hasher.h>
-
-#include "tabulated_single_bit_hasher.h"
-#include "I_byte_hasher.h"
+#include <hasher/I_byte_hasher.h>
 
 namespace hasher
 {
@@ -88,7 +86,7 @@ void tabulated_hasher::set_seed(uint64_t seed)
         {
             uint64_t new_seed = seed_list[i];
             m_p_impl->m_p_seeder->generate_numbers
-                ( seed_list[i]
+                ( seed_list[i] + i
                 , reinterpret_cast<uint8_t*>(&new_seed)
                 , sizeof(new_seed));
             m_p_impl->m_seeds[i] = new_seed;
